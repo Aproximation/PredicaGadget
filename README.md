@@ -1,19 +1,19 @@
-# PredicaGadget
+**Table of Contents**
+- [RGBLed.py](#asdf)
+  - [FOR](#)
+    - [HOW TO TEST](#)
+    - [HOW TO USE (from python)](#)
+    - [DOCUMENTATION](#)
 
 ###RGBLed.py
 ####FOR 
   RPI  +  RGB LED shared katode  + Python 2
 
 ####HOW TO TEST
-1. Connect 
-
-red led pin -> pin 23
-
-green led pin -> pin 18
-
-blue led pin -> pin 24
-
-2.  run sudo python RGBLed.py
+1. Connect red led pin -> pin 23
+2. Connect green led pin -> pin 18
+3. Connect blue led pin -> pin 24
+4. Run sudo python RGBLed.py
 
 ####HOW TO USE (from python)
 ```python
