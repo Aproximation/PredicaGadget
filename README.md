@@ -1,9 +1,9 @@
 **Table of Contents**
-- [RGBLed.py](#asdf)
-  - [FOR](#)
-    - [HOW TO TEST](#)
-    - [HOW TO USE (from python)](#)
-    - [DOCUMENTATION](#)
+- [RGBLed.py](#rgbledpy)
+  - [FOR](#for)
+    - [HOW TO TEST](#how-to-test)
+    - [HOW TO USE (from python)](#how-to-use-from-python)
+    - [DOCUMENTATION](#documentation)
 
 ###RGBLed.py
 ####FOR 
