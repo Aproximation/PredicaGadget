@@ -1,21 +1,4 @@
 # PredicaGadget
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
-
-- [PredicaGadget](#)
-..- [RGBLed.py](#)
-...- [FOR](#)
-....- [HOW TO TEST](#)
-....- [HOW TO USE (from python)](#)
-....- [DOCUMENTATION](#)
-
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
-
-- [PredicaGadget](#)
-		- [RGBLed.py](#)
-			- [FOR](#)
-			- [HOW TO TEST](#)
-			- [HOW TO USE (from python)](#)
-			- [DOCUMENTATION](#)
 
 ###RGBLed.py
 ####FOR 
@@ -23,9 +6,13 @@
 
 ####HOW TO TEST
 1. Connect 
-..* red led pin -> pin 23
-..*  green led pin -> pin 18
-..*  blue led pin -> pin 24
+
+red led pin -> pin 23
+
+green led pin -> pin 18
+
+blue led pin -> pin 24
+
 2.  run sudo python RGBLed.py
 
 ####HOW TO USE (from python)
