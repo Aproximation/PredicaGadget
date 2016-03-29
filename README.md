@@ -1,4 +1,22 @@
 # PredicaGadget
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [PredicaGadget](#)
+..- [RGBLed.py](#)
+...- [FOR](#)
+....- [HOW TO TEST](#)
+....- [HOW TO USE (from python)](#)
+....- [DOCUMENTATION](#)
+
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [PredicaGadget](#)
+		- [RGBLed.py](#)
+			- [FOR](#)
+			- [HOW TO TEST](#)
+			- [HOW TO USE (from python)](#)
+			- [DOCUMENTATION](#)
+
 ###RGBLed.py
 ####FOR 
   RPI  +  RGB LED shared katode  + Python 2
