@@ -1,7 +1,9 @@
 import serial
+from RGBLed import RGBLed
 
 #expected format is: #p#02 where 02 is number of operation
 
+#INITIALIZE
 srl = serial.Serial(
 	port='/dev/ttyAMA0',
 	baudrate = 9600,
@@ -11,6 +13,10 @@ srl = serial.Serial(
 	timeout = None
 )
 
+rgbLed = RGBLed(23,18,24)
+
+
+#IMPLEMENTATION
 def __ListenForCommunication():
         print('Listening')
 	while (True):
@@ -39,15 +45,16 @@ def __isNum(value):
 def DoAction(actionNum):
 	try:
 		action = {
-			0 : lambda:ChangeStatus("Offline"),
-			1 : lambda:ChangeStatus("Online"),
-			2 : lambda:ChangeStatus("Away"),
-			3 : lambda:ChangeStatus("DND"),
-                        4 : DoThis
+			0 : lambda:rgbLed.Off(),
+			1 : lambda:rgbLed.Green(),
+			2 : lambda:rgbLed.Yellow(),
+			4 : lambda:rgbLed.Red()
+                        #5 : DoThis
 		}
 		action[actionNum]()
 	except KeyError:
 		print "There is not such action asshole"
+
 def ChangeStatus(value):
 	print "Status changed to: ",value
 
