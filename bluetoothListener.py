@@ -1,5 +1,7 @@
 import serial
 from RGBLed import RGBLed
+import RPi.GPIO as GPIO
+import sys
 
 #expected format is: #p#02 where 02 is number of operation
 
@@ -10,7 +12,10 @@ srl = serial.Serial(
         parity = serial.PARITY_NONE,
         bytesize = serial.EIGHTBITS,
         stopbits = serial.STOPBITS_ONE,
-        timeout = None
+        timeout = None,
+	xonxoff = False,
+	rtscts = False,
+	dsrdtr = False
 )
 
 rgbLed = RGBLed(23,18,24)
@@ -18,16 +23,25 @@ rgbLed = RGBLed(23,18,24)
 
 #IMPLEMENTATION
 def __ListenForCommunication():
-        print('Listening')
-        while (True):
-                value = srl.read(1)
-                if(value == '#'):
-                        value = srl.read(1)
-                        if (value == 'p'):
-                                value = srl.read(1)
-                                if (value == '#'):
-                                        __ReadMsg()
-
+	try:
+	        print('Listening')
+	        while (True):
+	                value = srl.read(1)
+			#print ('Check')
+	                if(value == "$"):
+	                        value = srl.read(1)
+				#print ('Raz')
+	                        if (value == 'p'):
+	                                value = srl.read(1)
+					#print ('Dwa')
+	                                if (value == '$'):
+						#print ('Trzy')
+	                                        __ReadMsg()
+	except KeyboardInterrupt:
+		GPIO.cleanup()
+		sys.exit(1)		
+	except:
+		__ListenForCommunication()
 def __ReadMsg():
         msgNum = srl.read(2)
         if (__isNum(msgNum)):
@@ -53,6 +67,7 @@ def DoAction(actionNum):
                 }
                 action[actionNum]()
         except KeyError:
+		rgbLed.Off()
                 print "There is not such action asshole"
 
 def ChangeStatus(value):

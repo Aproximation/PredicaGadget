@@ -21,5 +21,5 @@ print "Waiting for interaction"
 
 while True:
         if acc.Double_Tap():
-                srl.write("#p#00")
+                srl.write("$p$00")
                 print "Change Status"
