@@ -9,23 +9,7 @@ namespace ToP.Console
 {
     public static class PredicaProtocol
     {
-        private static readonly string commandPrefix = "#p#";
-
-        private static Dictionary<Command, string> CommandToStringDict = new Dictionary<Command, string>()
-        {
-            [Command.ChangeRemoteDeviceName] = "ChangeName",
-            [Command.StatusChanged] = "StatusChanged",
-            [Command.Ping] = "Ping",
-            [Command.RotationChanged] = "RotationChanged"
-        };
-
-        public enum Command
-        {
-            ChangeRemoteDeviceName,
-            StatusChanged,
-            Ping,
-            RotationChanged
-        }
+        public static readonly string CommandPrefix = "$p$";
 
         public enum SkypeStatus
         {
@@ -36,21 +20,16 @@ namespace ToP.Console
             Invisible = 5,
         }
 
-        public static void QueueCommand(Command command, string value)
+        public enum PredicaCommand
         {
-            //string commandId = CommandToStringDict[command];
-            Program.OutgoingMeesageQueue.Enqueue(commandPrefix + "04");
-        }
-        public static void Ping()
-        {
-            QueueCommand(Command.Ping, DateTime.Now.ToString("T"));
+            ToggleDnd = 0
         }
 
-        public static void StatusChanged(TUserStatus userStatus)
+        public static string GetCommand(int status)
         {
-            SkypeStatus predicaProtStatus;
-            Enum.TryParse(((int)userStatus).ToString(), out predicaProtStatus);
-            QueueCommand(Command.StatusChanged, ((int)predicaProtStatus).ToString());
+            SkypeStatus convertedStatus = SkypeStatus.Offline;
+            Enum.TryParse(status.ToString(), out convertedStatus);
+            return CommandPrefix + $"{(int)convertedStatus:00}";
         }
     }
 }
