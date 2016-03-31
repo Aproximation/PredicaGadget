@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,9 @@ namespace ToP.Console
         private static async void Skype_UserStatus(TUserStatus Status)
         {
             if (writer == null) return;
-            writer.WriteString(PredicaProtocol.GetCommand((int)Status));
+            string msg = PredicaProtocol.GetCommand((int) Status);
+            System.Console.WriteLine("MSSND: {0}", msg);
+            writer.WriteString(msg);
             await writer.StoreAsync();
             await writer.FlushAsync();
         }
@@ -74,8 +77,9 @@ namespace ToP.Console
 
         private static async void WriterLoop(IOutputStream ostream)
         {
-            var writer = new DataWriter(ostream);
+            writer = new DataWriter(ostream);
             skype.UserStatus += Skype_UserStatus;
+           //Skype_UserStatus(skype.CurrentUserStatus);
         }
 
         private static async void ReaderLoop(IInputStream stream)
@@ -84,18 +88,26 @@ namespace ToP.Console
             reader.InputStreamOptions = InputStreamOptions.ReadAhead;
             while (ClientConnected)
             {
-                uint messageLength = await reader.LoadAsync(5);
-                string message = reader.ReadString(messageLength);
-                if (message.Contains(PredicaProtocol.CommandPrefix))
+                try
                 {
-                    message = message.Replace(PredicaProtocol.CommandPrefix, string.Empty);
-                    if (Convert.ToInt32(message) == (int) PredicaProtocol.PredicaCommand.ToggleDnd)
+                    uint messageLength = await reader.LoadAsync(5);
+                    string message = reader.ReadString(messageLength);
+                    System.Console.WriteLine("MSRCV: {0}", message);
+                    if (message.Contains(PredicaProtocol.CommandPrefix))
                     {
-                        if(skype.CurrentUserStatus != TUserStatus.cusDoNotDisturb)
-                            skype.CurrentUserStatus = TUserStatus.cusDoNotDisturb;
-                        else
-                            skype.CurrentUserStatus = TUserStatus.cusOnline;
+                        message = message.Replace(PredicaProtocol.CommandPrefix, string.Empty);
+                        if (Convert.ToInt32(message) == (int)PredicaProtocol.PredicaCommand.ToggleDnd)
+                        {
+                            if (skype.CurrentUserStatus != TUserStatus.cusDoNotDisturb)
+                                skype.CurrentUserStatus = TUserStatus.cusDoNotDisturb;
+                            else
+                                skype.CurrentUserStatus = TUserStatus.cusOnline;
+                        }
                     }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Debug.WriteLine("AOORE");
                 }
             }
         }

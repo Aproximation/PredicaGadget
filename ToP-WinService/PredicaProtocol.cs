@@ -9,7 +9,7 @@ namespace ToP.Console
 {
     public static class PredicaProtocol
     {
-        public static readonly string CommandPrefix = "#p#";
+        public static readonly string CommandPrefix = "$p$";
 
         public enum SkypeStatus
         {
