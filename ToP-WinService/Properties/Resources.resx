@@ -124,4 +124,7 @@
   <data name="AppName" xml:space="preserve">
     <value>Triangle of Power</value>
   </data>
+  <data name="MainWindow_InitializeIcon_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
 </root>

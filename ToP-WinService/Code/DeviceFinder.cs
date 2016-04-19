@@ -21,13 +21,23 @@ namespace TriangleOfPower.Code
     {
         public static BluetoothClient GetClientForDevice(string name)
         {
-            return Discover(name)
+            int retryCount = 0;
+            BluetoothDeviceInfo discoveredDevice = Discover(name);
+            while (discoveredDevice == null)
+            {
+                retryCount++;
+                App.Status = $"Looking for {name}. Retry count: {retryCount}";
+                Task.Delay(5000);
+                discoveredDevice = Discover(name);
+            }
+            return discoveredDevice
                 .ForcePair()
                 .Connect();
         }
 
         private static BluetoothClient Connect(this BluetoothDeviceInfo device)
         {
+            App.Status = "Connecting...";
             BluetoothClient client = new BluetoothClient();
             BluetoothEndPoint ep = new BluetoothEndPoint(device.DeviceAddress, BluetoothService.SerialPort);
             client.Connect(ep);
@@ -36,6 +46,7 @@ namespace TriangleOfPower.Code
 
         private static BluetoothDeviceInfo ForcePair(this BluetoothDeviceInfo device)
         {
+            App.Status = "Pairing...";
             if (device.Authenticated)
                 BluetoothSecurity.RemoveDevice(device.DeviceAddress);
             if (BluetoothSecurity.PairRequest(device.DeviceAddress, "1234"))
@@ -48,42 +59,13 @@ namespace TriangleOfPower.Code
         public static BluetoothDeviceInfo Discover(this string deviceName)
         {
             BluetoothClient client = new BluetoothClient();
-            var device = client.DiscoverDevicesInRange().FirstOrDefault(x => x.DeviceName.Contains(deviceName));           
-            if (device == null)
-            {
-                App.MainIcon.ShowBalloonTip(30000, Properties.Resources.AppName, "HC-05 not found", ToolTipIcon.Warning);
-                return null;
-            }
-            return device;
+            return client.DiscoverDevicesInRange().FirstOrDefault(x => x.DeviceName.Contains(deviceName));           
+            //if (device == null)
+            //{
+            //    App.MainIcon.ShowBalloonTip(30000, Properties.Resources.AppName, "HC-05 not found", ToolTipIcon.Warning);
+            //    return null;
+            //}
+            //return device;
         }
-
-        //private static string GetBluetoothPort(string deviceAddress)
-        //{
-        //    const string Win32_SerialPort = "Win32_SerialPort";
-        //    SelectQuery q = new SelectQuery(Win32_SerialPort);
-        //    ManagementObjectSearcher s = new ManagementObjectSearcher(q);
-        //    foreach (object cur in s.Get())
-        //    {
-        //        ManagementObject mo = (ManagementObject)cur;
-        //        string pnpId = mo.GetPropertyValue("PNPDeviceID").ToString();
-
-        //        if (pnpId.Contains(deviceAddress))
-        //        {
-        //            object captionObject = mo.GetPropertyValue("Caption");
-        //            string caption = captionObject.ToString();
-        //            int index = caption.LastIndexOf("(COM", StringComparison.Ordinal);
-        //            if (index > 0)
-        //            {
-        //                string portString = caption.Substring(index);
-        //                string comPort = portString.
-        //                              Replace("(", string.Empty).Replace(")", string.Empty);
-        //                return comPort;
-        //            }
-        //        }
-        //    }
-        //    System.Windows.MessageBox.Show(
-        //        "Unable to find any serial port for device communication. Please remove and pair the Triangle of Power");
-        //    return null;
-        //}
     }
 }

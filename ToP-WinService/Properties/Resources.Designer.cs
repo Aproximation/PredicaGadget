@@ -78,5 +78,14 @@ namespace TriangleOfPower.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string MainWindow_InitializeIcon_Exit {
+            get {
+                return ResourceManager.GetString("MainWindow_InitializeIcon_Exit", resourceCulture);
+            }
+        }
     }
 }

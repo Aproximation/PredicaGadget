@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,48 +17,64 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TriangleOfPower.Code;
+using Application = System.Windows.Forms.Application;
 using ContextMenu = System.Windows.Forms.ContextMenu;
+using Control = System.Windows.Forms.Control;
 using MenuItem = System.Windows.Forms.MenuItem;
+using Point = System.Drawing.Point;
 
 namespace TriangleOfPower
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         private RaspberryConnection raspberryConnection;
+        private readonly ContextMenu contextMenu = new ContextMenu();
         public MainWindow()
         {
             InitializeComponent();
             InitializeIcon();
-            InitializeConnection();
-
+            Task.Run(() => InitializeConnection());
+            Application.Run();
         }
 
         private void InitializeConnection()
         {
-            var btClient = DeviceFinder.GetClientForDevice("HC-05");
+            string DeviceName = "HC-05";
+            App.Status = "Starting up...";
+            var btClient = DeviceFinder.GetClientForDevice(DeviceName);
             raspberryConnection = new RaspberryConnection(btClient.GetStream(), btClient.Client);
             raspberryConnection.Start();
+            App.Status = $"Connected to {DeviceName}";
             App.MainIcon.ShowBalloonTip(10000, Properties.Resources.AppName, "Connected!", ToolTipIcon.Info);
         }
 
         private void InitializeIcon()
         {
-            App.MainIcon = new NotifyIcon();
-            App.MainIcon.Text = Properties.Resources.AppName;
-            App.MainIcon.Icon = TriangleOfPower.Properties.Resources.icon;
-            App.MainIcon.Visible = true;
-            App.MainIcon.ContextMenu = new ContextMenu(new MenuItem[]
+            contextMenu.MenuItems.Add(new MenuItem()
             {
-                new MenuItem()
-                {
-                    Text = Properties.Resources.AppName,
-                    Visible = true,
-                    Enabled = false
-                }
+                Text = $"{Properties.Resources.AppName} {Assembly.GetExecutingAssembly().GetName().Version}",
+                Visible = true,
+                Enabled = false,
             });
+            contextMenu.MenuItems.Add(App.StatusMenuItem);
+            contextMenu.MenuItems.Add(new MenuItem("-"));
+            contextMenu.MenuItems.Add(new MenuItem(Properties.Resources.MainWindow_InitializeIcon_Exit,
+                (sender, args) => Environment.Exit(0)));
+            App.MainIcon = new NotifyIcon
+            {
+                Text = Properties.Resources.AppName,
+                Icon = Properties.Resources.icon,
+                Visible = true,
+                ContextMenu = contextMenu
+            };
+        }
+
+        public void Dispose()
+        {
+            App.MainIcon?.Dispose();
         }
     }
 }

@@ -15,5 +15,13 @@ namespace TriangleOfPower
     public partial class App : Application
     {
         public static NotifyIcon MainIcon { get; set; }
+
+        public static string Status
+        {
+            get { return StatusMenuItem.Text.Replace("Status: ", string.Empty); }
+            set { StatusMenuItem.Text = $"Status: {value}"; }
+        }
+
+        public static MenuItem StatusMenuItem { get; set; } = new MenuItem() {Enabled = false};
     }
 }
